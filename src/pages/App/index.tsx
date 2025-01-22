@@ -1,18 +1,11 @@
-import { Link, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { Container } from "./styles";
+import { Header } from "../../components/Header";
 
 export function App() {
   return (
     <Container>
-      <header>
-        <h1>Header</h1>
-        <nav>
-          <Link to="/">Home</Link>
-          <Link to="/search">Search</Link>
-          <Link to="/details">Details</Link>
-        </nav>
-      </header>
-
+      <Header />
       <Outlet />
 
       <footer>
