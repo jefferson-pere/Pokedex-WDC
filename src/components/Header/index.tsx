@@ -1,14 +1,26 @@
 import { Container } from "./styles";
 import logo from "../../assets/pokemon-logo.png";
-import { Link } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
+import { SubmitHandler, useForm } from "react-hook-form";
+
+type Input = {
+  pokemonName: string;
+};
 
 export function Header() {
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Input>();
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const navigate = useNavigate();
+
+  const onSubmit: SubmitHandler<Input> = (data) => {
+    console.log(data.pokemonName);
+    navigate("/search");
   };
+
   return (
     <Container>
       <h1 className="srOnly">Pokédex - Reprograma Jucás</h1>
@@ -22,14 +34,18 @@ export function Header() {
           <label htmlFor="pokemonName" className="srOnly">
             Pesquisar Pokémon
           </label>
+
           <input
             type="text"
             id="pokemonName"
             placeholder="Pesquisar Pokémon"
-            {...register("pokemonName")}
+            {...register("pokemonName", { required: "Informe o nome do Pokémon" })}
           />
-          <button>Pesquisar</button>
+
+          <span className="inputError">{errors.pokemonName?.message}</span>
         </section>
+
+        <button>Pesquisar</button>
       </form>
     </Container>
   );
