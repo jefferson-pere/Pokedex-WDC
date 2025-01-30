@@ -4,7 +4,8 @@ import { Container } from "./styles";
 import { useQueryPokemonPage } from "../../hooks/useQueryPokemonPage";
 
 export function Home() {
-  const { data, isLoading, isError } = useQueryPokemonPage();
+  const { data, isLoading, isError, page, nextPage, prevPage, totalPage } =
+    useQueryPokemonPage();
 
   return (
     <Container>
@@ -14,13 +15,20 @@ export function Home() {
       {!isLoading && isError && <span className="loading">Error...</span>}
 
       <div className="gridCards">
-        {data?.results.map((pokemon) => {
+        {data?.map((pokemon) => {
           return (
-            <Link to="/details">
+            <Link to="/details" key={pokemon.id}>
               <PokemonCard pokemon={pokemon} />
             </Link>
           );
         })}
+      </div>
+      <div className="paginationComponent">
+        <button onClick={prevPage}>{"<"} Anterior</button>
+        <span className="mumberPage">
+          {String(page).padStart(2, "0")}/{totalPage}
+        </span>
+        <button onClick={nextPage}>Próximo {">"}</button>
       </div>
     </Container>
   );
