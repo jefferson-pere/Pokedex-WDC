@@ -18,7 +18,7 @@ export function Header() {
 
   const onSubmit: SubmitHandler<Input> = (data) => {
     console.log(data.pokemonName);
-    navigate("/search");
+    navigate(`/search?q=${data.pokemonName}`);
   };
 
   return (
@@ -39,7 +39,9 @@ export function Header() {
             type="text"
             id="pokemonName"
             placeholder="Pesquisar Pokémon"
-            {...register("pokemonName", { required: "Informe o nome do Pokémon" })}
+            {...register("pokemonName", {
+              required: "Informe o nome do Pokémon",
+            })}
           />
 
           <span className="inputError">{errors.pokemonName?.message}</span>
