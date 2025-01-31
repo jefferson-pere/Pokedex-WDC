@@ -17,7 +17,7 @@ export function Home() {
       <div className="gridCards">
         {data?.map((pokemon) => {
           return (
-            <Link to="/details" key={pokemon.id}>
+            <Link to={`/details/${pokemon.name}`} key={pokemon.id}>
               <PokemonCard pokemon={pokemon} />
             </Link>
           );
