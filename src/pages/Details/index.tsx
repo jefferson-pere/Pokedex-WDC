@@ -1,30 +1,23 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useQueryPokemonDetails } from "../../hooks/useQueryPokemonDetails";
 import { Container } from "./styles";
-import { TypeCard } from "../../components/TypeCard";
+import { useQueryPokemonDetails } from "../../hooks/useQueryPokemonDetails";
 import pokeball from "../../assets/pokeball.png";
-import { useEffect } from "react";
+import { TypeCard } from "../../components/TypeCard";
 
 export function Details() {
   const { name } = useParams();
-  const { data, isLoading, error } = useQueryPokemonDetails(name!);
+  const { data, isLoading, isError } = useQueryPokemonDetails(name!);
   const navigate = useNavigate();
-
-  if (error) console.error(error);
-
-  useEffect(() => {
-    window.scrollTo({ top: 0 });
-  }, []);
 
   return (
     <Container>
       {isLoading && <span className="loading">Loading...</span>}
-      {!isLoading && error && <span className="loading">Error...</span>}
+      {!isLoading && isError && <span className="loading">Error...</span>}
 
       {data && (
         <div className="boxDetails">
           <button onClick={() => navigate(-1)} className="backPageButton">
-            &lt; voltar
+            {"<"} voltar
           </button>
 
           <div className="pokemonImage">
@@ -32,13 +25,13 @@ export function Details() {
               src={
                 data.sprites.other["official-artwork"].front_default || pokeball
               }
-              alt={data.name}
+              alt=""
             />
           </div>
 
           <div className="boxStatus">
             <strong>
-              #{data.id} {data.name[0].toUpperCase() + data.name.substring(1)}
+              #{data.id} {data.name[0].toUpperCase() + data.name.slice(1)}
             </strong>
 
             <div className="sizePokemon">
@@ -47,25 +40,19 @@ export function Details() {
             </div>
 
             <div className="boxTypes">
-              {data.types.map((type) => {
-                return (
-                  <TypeCard
-                    key={type.type.name}
-                    type={type.type.name}
-                    size={16}
-                  />
-                );
+              {data.types.map(({ type }) => {
+                return <TypeCard key={type.name} type={type.name} size={16} />;
               })}
             </div>
           </div>
 
           <div className="boxStats">
-            {data.stats?.map((stat) => {
+            {data.stats.map(({ stat, base_stat }) => {
               return (
-                <div key={stat.stat.name} className="stats">
-                  <span className="statName">{stat.stat.name}</span>
-                  <progress max={200} value={stat.base_stat} />
-                  <span className="statValue">{stat.base_stat}</span>
+                <div className="stats">
+                  <span className="statName">{stat.name}</span>
+                  <progress max={200} value={base_stat} />
+                  <span className="statValue">{base_stat}</span>
                 </div>
               );
             })}
